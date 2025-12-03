@@ -24,5 +24,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("com.example.MainKt")
+    mainClass.set("adventOfCode.year2025.MainKt")
 }

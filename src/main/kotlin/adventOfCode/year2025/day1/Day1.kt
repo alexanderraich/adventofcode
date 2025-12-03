@@ -8,27 +8,38 @@ fun main() {
     println("Password: $password")
 }
 
-fun countZeroCrossings(instructions: List<String>): Int {
-    var position = 50
-    var zeroCount = 0
-    
-    for (instruction in instructions) {
-        val direction = instruction[0]
-        val amount = instruction.substring(1).toInt()
-        
-        position = when (direction) {
-            'L' -> (position + amount) % 100
-            'R' -> (position - amount + 100) % 100
-            else -> position
+fun countZeroCrossings(instructions: List<String>): Int =
+    instructions
+        .fold(50 to 0) { state, instruction ->
+            processInstruction(state, instruction)
         }
-        
-        if (position == 0) {
-            zeroCount++
-        }
-    }
-    
-    return zeroCount
+        .second
+
+private fun processInstruction(state: Pair<Int, Int>, instruction: String): Pair<Int, Int> {
+    val (position, zeroCount) = state
+    val newPosition = calculateNewPosition(position, instruction)
+    val newZeroCount = incrementIfZero(zeroCount, newPosition)
+    return newPosition to newZeroCount
 }
+
+private fun calculateNewPosition(position: Int, instruction: String): Int {
+    val amount = parseAmount(instruction)
+    val delta = calculateDelta(instruction[0], amount)
+    return (position + delta + 100) % 100
+}
+
+private fun parseAmount(instruction: String): Int =
+    instruction.drop(1).toInt()
+
+private fun calculateDelta(direction: Char, amount: Int): Int =
+    when (direction) {
+        'L' -> amount
+        'R' -> -amount
+        else -> 0
+    }
+
+private fun incrementIfZero(count: Int, position: Int): Int =
+    count + (position == 0).compareTo(false)
 
 fun readInput(): List<String> {
     return object {}.javaClass.getResourceAsStream("/adventOfCode/year2025/day1/input.txt")

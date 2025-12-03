@@ -24,5 +24,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("adventOfCode.year2025.MainKt")
+    mainClass.set("adventOfCode.year2025.day1.Day1Kt")
 }
